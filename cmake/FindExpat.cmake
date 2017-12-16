@@ -1,6 +1,3 @@
-# Code from:
-# https://github.com/qgis/QGIS/blob/master/cmake/FindExpat.cmake
-#
 # Find Expat
 # ~~~~~~~~~~
 # Copyright (c) 2007, Martin Dobias <wonder.sk at gmail.com>
@@ -21,25 +18,38 @@
 # and then again with no specified paths to search the default
 # locations. When an earlier FIND_* succeeds, subsequent FIND_*s
 # searching for the same item do nothing. 
-find_path(EXPAT_INCLUDE_DIR expat.h
-    "$ENV{LIB_DIR}/include/"
-    "$ENV{LIB_DIR}/include/expat"
-    c:/msys/local/include
+find_path(EXPAT_INCLUDE_DIR
+  NAMES expat.h
+#  PATHS 
+#    "$ENV{LIB_DIR}/include/"
+#    "$ENV{LIB_DIR}/include/expat"
+#    c:/msys/local/include
+  HINTS
+    ENV EXPAT_DIR
+  PATH_SUFFIXES
+    include/expat
+    include
   NO_DEFAULT_PATH
-  )
-find_path(EXPAT_INCLUDE_DIR expat.h)
+)
+#find_path(EXPAT_INCLUDE_DIR
+#  NAMES expat.h
+#)
 
 # libexpat needed for msvc version
 find_library(EXPAT_LIBRARY
   NAMES expat libexpat
-  PATHS 
-    "$ENV{LIB_DIR}/lib"
-    c:/msys/local/lib
+#  PATHS 
+#    "$ENV{LIB_DIR}/lib"
+#    c:/msys/local/lib
+  HINTS
+    ENV EXPAT_DIR
+  PATH_SUFFIXES
+    lib
   NO_DEFAULT_PATH
-  )
-find_library(EXPAT_LIBRARY
-  NAMES expat libexpat
 )
+#find_library(EXPAT_LIBRARY
+#  NAMES expat libexpat
+#)
 
 if(EXPAT_INCLUDE_DIR AND EXPAT_LIBRARY)
   set(EXPAT_FOUND TRUE)
