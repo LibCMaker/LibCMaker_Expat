@@ -1,3 +1,6 @@
+# Code from:
+# https://github.com/qgis/QGIS/blob/master/cmake/FindExpat.cmake
+#
 # Find Expat
 # ~~~~~~~~~~
 # Copyright (c) 2007, Martin Dobias <wonder.sk at gmail.com>
@@ -18,40 +21,41 @@
 # and then again with no specified paths to search the default
 # locations. When an earlier FIND_* succeeds, subsequent FIND_*s
 # searching for the same item do nothing. 
-FIND_PATH(EXPAT_INCLUDE_DIR expat.h
-  "$ENV{LIB_DIR}/include/"
-  "$ENV{LIB_DIR}/include/expat"
-  c:/msys/local/include
+find_path(EXPAT_INCLUDE_DIR expat.h
+    "$ENV{LIB_DIR}/include/"
+    "$ENV{LIB_DIR}/include/expat"
+    c:/msys/local/include
   NO_DEFAULT_PATH
   )
-FIND_PATH(EXPAT_INCLUDE_DIR expat.h)
-#libexpat needed for msvc version
-FIND_LIBRARY(EXPAT_LIBRARY NAMES expat libexpat PATHS 
-  "$ENV{LIB_DIR}/lib"
-  c:/msys/local/lib
+find_path(EXPAT_INCLUDE_DIR expat.h)
+
+# libexpat needed for msvc version
+find_library(EXPAT_LIBRARY
+  NAMES expat libexpat
+  PATHS 
+    "$ENV{LIB_DIR}/lib"
+    c:/msys/local/lib
   NO_DEFAULT_PATH
   )
-FIND_LIBRARY(EXPAT_LIBRARY NAMES expat libexpat)
+find_library(EXPAT_LIBRARY
+  NAMES expat libexpat
+)
 
-IF (EXPAT_INCLUDE_DIR AND EXPAT_LIBRARY)
-   SET(EXPAT_FOUND TRUE)
-ENDIF (EXPAT_INCLUDE_DIR AND EXPAT_LIBRARY)
+if(EXPAT_INCLUDE_DIR AND EXPAT_LIBRARY)
+  set(EXPAT_FOUND TRUE)
+endif(EXPAT_INCLUDE_DIR AND EXPAT_LIBRARY)
 
 
-IF (EXPAT_FOUND)
-
-   IF (NOT EXPAT_FIND_QUIETLY)
-      MESSAGE(STATUS "Found Expat: ${EXPAT_LIBRARY}")
-   ENDIF (NOT EXPAT_FIND_QUIETLY)
-
-ELSE (EXPAT_FOUND)
-
-   IF (EXPAT_FIND_REQUIRED)
-     MESSAGE(FATAL_ERROR "Could not find Expat")
-   ELSE (EXPAT_FIND_REQUIRED)
-     IF (NOT EXPAT_FIND_QUIETLY)
-        MESSAGE(STATUS "Could not find Expat")
-     ENDIF (NOT EXPAT_FIND_QUIETLY)
-   ENDIF (EXPAT_FIND_REQUIRED)
-
-ENDIF (EXPAT_FOUND)
+if(EXPAT_FOUND)
+  if(NOT EXPAT_FIND_QUIETLY)
+    message(STATUS "Found Expat: ${EXPAT_LIBRARY}")
+  endif(NOT EXPAT_FIND_QUIETLY)
+else(EXPAT_FOUND)
+  if(EXPAT_FIND_REQUIRED)
+    message(FATAL_ERROR "Could not find Expat")
+  else(EXPAT_FIND_REQUIRED)
+    if(NOT EXPAT_FIND_QUIETLY)
+     message(STATUS "Could not find Expat")
+    endif(NOT EXPAT_FIND_QUIETLY)
+  endif(EXPAT_FIND_REQUIRED)
+endif(EXPAT_FOUND)
