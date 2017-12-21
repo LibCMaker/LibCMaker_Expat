@@ -37,7 +37,8 @@ find_path(EXPAT_INCLUDE_DIR
 
 # libexpat needed for msvc version
 find_library(EXPAT_LIBRARY
-  NAMES expat libexpat
+  NAMES
+    expatd expat libexpatd libexpat
 #  PATHS 
 #    "$ENV{LIB_DIR}/lib"
 #    c:/msys/local/lib

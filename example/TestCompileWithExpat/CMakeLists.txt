@@ -119,6 +119,11 @@ lib_cmaker_expat(
 # find_package
 #-----------------------------------------------------------------------
 
+set(LIBCMAKER_EXPAT_SRC_DIR
+  "${PROJECT_SOURCE_DIR}/cmake/LibCMaker_Expat")
+# To use our FindEXPAT.cmake
+list(APPEND CMAKE_MODULE_PATH "${LIBCMAKER_EXPAT_SRC_DIR}/cmake")
+
 # Use newly got library.
 find_package(EXPAT REQUIRED)
 
@@ -138,5 +143,12 @@ set(lib_SRC_DIR "${UNPACKED_SRC_DIR}/${lib_SRC_DIR_NAME}")
 add_executable(${PROJECT_NAME}
   ${lib_SRC_DIR}/examples/elements.c
 )
+
+if(NOT BUILD_SHARED_LIBS)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE
+    -DXML_STATIC
+  )
+endif()
+
 target_include_directories(${PROJECT_NAME} PRIVATE ${EXPAT_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${EXPAT_LIBRARY})
