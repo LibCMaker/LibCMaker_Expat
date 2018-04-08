@@ -33,6 +33,7 @@ include(CMakeParseArguments) # cmake_parse_arguments
 
 include(cmr_lib_cmaker)
 include(cmr_print_debug_message)
+include(cmr_print_message)
 include(cmr_print_var_value)
 
 
@@ -44,6 +45,8 @@ list(APPEND CMAKE_MODULE_PATH "${lcm_LibCMaker_EXPAT_SRC_DIR}/cmake/modules")
 
 function(lib_cmaker_expat)
   cmake_minimum_required(VERSION 3.2)
+
+  cmr_print_message("======== Build library: Expat ========")
 
   set(options
     # optional args
