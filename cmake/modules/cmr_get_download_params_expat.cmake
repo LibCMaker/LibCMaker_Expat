@@ -21,18 +21,27 @@
 #    along with this program. If not, see <http://www.gnu.org/licenses/>.
 # ****************************************************************************
 
-# Can be used as separate project for library building with standard CMake way.
+# Part of "LibCMaker/cmake/modules/cmr_get_download_params.cmake".
+  
+  include(cmr_get_version_parts)
+  cmr_get_version_parts(${version} major minor patch tweak)
 
-cmake_minimum_required(VERSION 3.2)
-project(LibCMaker_Expat)
+  if(version VERSION_EQUAL "2.2.5")
+    set(arch_file_sha
+      "d9dc32efba7e74f788fcc4f212a43216fc37cf5f23f4c2339664d473353aedf6")
+  endif()
 
-if(NOT LIBCMAKER_SRC_DIR)
-  message(FATAL_ERROR
-    "Please set LIBCMAKER_SRC_DIR with path to LibCMaker project root")
-endif()
-list(APPEND CMAKE_MODULE_PATH "${LIBCMAKER_SRC_DIR}/cmake/modules")
+  set(base_url "https://github.com/libexpat/libexpat/releases/download")
+  set(src_dir_name    "expat-${version}")
+  set(arch_file_name  "${src_dir_name}.tar.bz2")
+  set(unpack_to_dir   "${unpacked_dir}/${src_dir_name}")
 
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/modules")
-
-include(cmr_expat_cmaker)
-cmr_expat_cmaker()
+  set(${out_ARCH_SRC_URL}   "${base_url}/R_${major}_${minor}_${patch}/${arch_file_name}" PARENT_SCOPE)
+  set(${out_ARCH_DST_FILE}  "${download_dir}/${arch_file_name}" PARENT_SCOPE)
+  set(${out_ARCH_FILE_SHA}  "${arch_file_sha}" PARENT_SCOPE)
+  set(${out_SHA_ALG}        "SHA256" PARENT_SCOPE)
+  set(${out_UNPACK_TO_DIR}  "${unpack_to_dir}" PARENT_SCOPE)
+  set(${out_UNPACKED_SOURCES_DIR}
+    "${unpack_to_dir}/${src_dir_name}" PARENT_SCOPE
+  )
+  set(${out_VERSION_BUILD_DIR} "${build_dir}/${src_dir_name}" PARENT_SCOPE)

@@ -21,32 +21,20 @@
 #    along with this program. If not, see <http://www.gnu.org/licenses/>.
 # ****************************************************************************
 
-include(cmr_get_version_parts)
-include(cmr_print_fatal_error)
+# Part of "LibCMaker/cmake/modules/cmr_build_rules.cmake".
 
-function(cmr_expat_get_download_params
-    version
-    out_url out_sha out_src_dir_name out_tar_file_name)
-
-  set(lib_base_url "https://github.com/libexpat/libexpat/releases/download")
-
-  if(version VERSION_EQUAL "2.2.5")
-    set(lib_sha
-      "d9dc32efba7e74f788fcc4f212a43216fc37cf5f23f4c2339664d473353aedf6")
+  set(expat_BUILD_shared OFF)
+  if(BUILD_SHARED_LIBS)
+    set(expat_BUILD_shared ON)
   endif()
+  option(BUILD_shared "build a shared expat library" ${expat_BUILD_shared})
 
-  if(NOT DEFINED lib_sha)
-    cmr_print_fatal_error("Library version ${version} is not supported.")
+  set(expat_INSTALL ON)
+  if(SKIP_INSTALL_ALL)
+    set(expat_INSTALL OFF)
   endif()
+  option(INSTALL "install expat files in cmake install target" ${expat_INSTALL})
 
-  cmr_get_version_parts(${version} major minor patch tweak)
-  
-  set(lib_src_name "expat-${major}.${minor}.${patch}")
-  set(lib_tar_file_name "${lib_src_name}.tar.bz2")
-  set(lib_url "${lib_base_url}/R_${major}_${minor}_${patch}/${lib_tar_file_name}")
 
-  set(${out_url} "${lib_url}" PARENT_SCOPE)
-  set(${out_sha} "${lib_sha}" PARENT_SCOPE)
-  set(${out_src_dir_name} "${lib_src_name}" PARENT_SCOPE)
-  set(${out_tar_file_name} "${lib_tar_file_name}" PARENT_SCOPE)
-endfunction()
+  # Configure library.
+  add_subdirectory(${lib_SRC_DIR} ${lib_VERSION_BUILD_DIR})
