@@ -21,7 +21,7 @@
 #    along with this program. If not, see <http://www.gnu.org/licenses/>.
 # ****************************************************************************
 
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.3)
 
 project(LibCMaker_Expat_Compile_Test C)
 
@@ -62,16 +62,13 @@ set(LIBCMAKER_SRC_DIR "${PROJECT_SOURCE_DIR}/cmake/LibCMaker")
 # Standard CMake vars.
 #set(BUILD_SHARED_LIBS ON)
 
-#set(SKIP_INSTALL_ALL ON)
-
 # Vars to lib_cmaker_expat().
 set(EXPAT_lib_VERSION   "2.2.5")
 set(EXPAT_DOWNLOAD_DIR  "${PROJECT_BINARY_DIR}")
 set(EXPAT_UNPACKED_DIR  "${PROJECT_BINARY_DIR}")
 set(EXPAT_BUILD_DIR     "${PROJECT_BINARY_DIR}/build_expat")
 
-set(EXPAT_DIR "${CMAKE_INSTALL_PREFIX}")
-set(ENV{EXPAT_DIR} "${EXPAT_DIR}")
+#set(SKIP_INSTALL_ALL ON)
 
 # Library specific vars and options.
 
@@ -83,9 +80,10 @@ option(BUILD_tests "build the tests for expat library" OFF)
 option(BUILD_doc "build man page for xmlwf" OFF)
 option(USE_libbsd "utilize libbsd (for arc4random_buf)" OFF)
 # Option INSTALL is set in lib_cmaker_expat() by NOT SKIP_INSTALL_ALL.
-#option(INSTALL "install expat files in cmake install target" ON)
+# Set in 'cmr_build_rules_expat' as NOT SKIP_INSTALL_ALL.
+#option(INSTALL "install expat files in cmake install target" ${NOT SKIP_INSTALL_ALL})
 
-# configuration options
+# Configuration options.
 set(XML_CONTEXT_BYTES 1024 CACHE STRING
   "Define to specify how much context to retain around the current parse point")
 option(XML_DTD

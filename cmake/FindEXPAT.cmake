@@ -24,12 +24,14 @@ find_path(EXPAT_INCLUDE_DIR
 #    "$ENV{LIB_DIR}/include/"
 #    "$ENV{LIB_DIR}/include/expat"
 #    c:/msys/local/include
-  HINTS
-    ENV EXPAT_DIR
+#  HINTS
+#    ENV EXPAT_DIR
   PATH_SUFFIXES
     include/expat
     include
-  NO_DEFAULT_PATH
+  NO_CMAKE_ENVIRONMENT_PATH
+  NO_SYSTEM_ENVIRONMENT_PATH
+  NO_CMAKE_SYSTEM_PATH
 )
 #find_path(EXPAT_INCLUDE_DIR
 #  NAMES expat.h
@@ -42,11 +44,13 @@ find_library(EXPAT_LIBRARY
 #  PATHS 
 #    "$ENV{LIB_DIR}/lib"
 #    c:/msys/local/lib
-  HINTS
-    ENV EXPAT_DIR
+#  HINTS
+#    ENV EXPAT_DIR
   PATH_SUFFIXES
     lib
-  NO_DEFAULT_PATH
+  NO_CMAKE_ENVIRONMENT_PATH
+  NO_SYSTEM_ENVIRONMENT_PATH
+  NO_CMAKE_SYSTEM_PATH
 )
 #find_library(EXPAT_LIBRARY
 #  NAMES expat libexpat
