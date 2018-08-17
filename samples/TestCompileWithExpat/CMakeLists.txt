@@ -40,37 +40,36 @@ if(ANDROID)
   list(APPEND CMAKE_FIND_ROOT_PATH "${CMAKE_INSTALL_PREFIX}")
 endif()
 
-# To use our FindEXPAT.cmake.
-list(APPEND CMAKE_MODULE_PATH
-  "${PROJECT_SOURCE_DIR}/cmake/LibCMaker_Expat/cmake"
-)
-
 
 #-----------------------------------------------------------------------
 # Set path to LibCMaker root
 #-----------------------------------------------------------------------
 
-set(LIBCMAKER_SRC_DIR "${PROJECT_SOURCE_DIR}/cmake/LibCMaker")
+set(LibCMaker_DIR "${CMAKE_CURRENT_LIST_DIR}/cmake/LibCMaker")
 # Uncomment it if need functions from LibCMaker
-#list(APPEND CMAKE_MODULE_PATH "${LIBCMAKER_SRC_DIR}/cmake/modules")
+#list(APPEND CMAKE_MODULE_PATH "${LibCMaker_DIR}/cmake")
 
 
 #-----------------------------------------------------------------------
 # Set vars to LibCMaker_Expat
 #-----------------------------------------------------------------------
 
-# Standard CMake vars.
-#set(BUILD_SHARED_LIBS ON)
-
-# Vars to lib_cmaker_expat().
+set(EXPAT_lib_NAME      "Expat")
 set(EXPAT_lib_VERSION   "2.2.5")
-set(EXPAT_DOWNLOAD_DIR  "${PROJECT_BINARY_DIR}")
-set(EXPAT_UNPACKED_DIR  "${PROJECT_BINARY_DIR}")
-set(EXPAT_BUILD_DIR     "${PROJECT_BINARY_DIR}/build_expat")
+set(EXPAT_lib_DIR       "${CMAKE_CURRENT_LIST_DIR}/cmake/LibCMaker_Expat")
+
+# To use below for sample sources.
+set(cmr_UNPACKED_DIR ${CMAKE_CURRENT_BINARY_DIR}/download/unpacked)
+
+# To use our FindEXPAT.cmake.
+list(APPEND CMAKE_MODULE_PATH "${EXPAT_lib_DIR}/cmake/modules")
 
 #set(SKIP_INSTALL_ALL ON)
 
-# Library specific vars and options.
+
+#-----------------------------------------------------------------------
+# Library specific vars and options
+#-----------------------------------------------------------------------
 
 option(BUILD_tools "build the xmlwf tool for expat library" OFF)
 option(BUILD_examples "build the examples for expat library" OFF)
@@ -96,27 +95,19 @@ endif()
 
 
 #-----------------------------------------------------------------------
-# Build and install the Expat
+# Build, install and find the Expat
 #-----------------------------------------------------------------------
 
-include(
-  ${PROJECT_SOURCE_DIR}/cmake/LibCMaker_Expat/lib_cmaker_expat.cmake)
-
-# Make compile, build and install the library at a config CMake phase.
-lib_cmaker_expat(
-  VERSION       ${EXPAT_lib_VERSION}
-  DOWNLOAD_DIR  ${EXPAT_DOWNLOAD_DIR}
-  UNPACKED_DIR  ${EXPAT_UNPACKED_DIR}
-  BUILD_DIR     ${EXPAT_BUILD_DIR}
+# Make build and install the library at a config CMake phase.
+include(${LibCMaker_DIR}/cmake/cmr_find_package.cmake)
+cmr_find_package(
+  LibCMaker_DIR   ${LibCMaker_DIR}
+  NAME            ${EXPAT_lib_NAME}
+  VERSION         ${EXPAT_lib_VERSION}
+  LIB_DIR         ${EXPAT_lib_DIR}
+  REQUIRED
+  FIND_MODULE_NAME EXPAT
 )
-
-
-#-----------------------------------------------------------------------
-# find_package()
-#-----------------------------------------------------------------------
-
-# Use newly got library.
-find_package(EXPAT REQUIRED)
 
 
 #-----------------------------------------------------------------------
@@ -127,7 +118,7 @@ find_package(EXPAT REQUIRED)
 
 # Get an example sources from the lib sources.
 set(lib_SRC_DIR
-  "${EXPAT_UNPACKED_DIR}/expat-${EXPAT_lib_VERSION}/expat-${EXPAT_lib_VERSION}"
+  "${cmr_UNPACKED_DIR}/expat-${EXPAT_lib_VERSION}/expat-${EXPAT_lib_VERSION}"
 )
 set(lib_EXAMPLES_SRC_DIR "${lib_SRC_DIR}/examples")
 
