@@ -169,6 +169,11 @@ matrix:
       cmr_MSVC_2015_x64_static: ON
 
 
+# TODO: remove it after fis this build.
+    - image: Visual Studio 2017
+      cmr_MinGW_w64_x64_shared: ON
+
+
 clone_folder: c:\projects\LibCMaker_${cmr_LIB_NAME}
 
 
