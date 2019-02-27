@@ -29,6 +29,7 @@
 
 ## +++ Common part of the lib_cmaker_<lib_name> function +++
   set(find_LIB_VARS
+    COPY_EXPAT_CMAKE_BUILD_SCRIPTS
     BUILD_tools
     BUILD_examples
     BUILD_tests

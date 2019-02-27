@@ -38,6 +38,7 @@ list(APPEND CMAKE_MODULE_PATH "${EXPAT_lib_DIR}/cmake/modules")
 #-----------------------------------------------------------------------
 
 #set(SKIP_INSTALL_ALL ON)
+set(COPY_EXPAT_CMAKE_BUILD_SCRIPTS ON)
 
 
 #-----------------------------------------------------------------------

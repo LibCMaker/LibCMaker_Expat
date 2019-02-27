@@ -35,6 +35,15 @@
   endif()
   option(INSTALL "install expat files in cmake install target" ${expat_INSTALL})
 
+  # Copy CMake build scripts.
+  if(COPY_EXPAT_CMAKE_BUILD_SCRIPTS)
+    cmr_print_status("Copy CMake build scripts to unpacked sources.")
+    execute_process(
+      COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${lib_BASE_DIR}/patch/expat-${lib_VERSION}
+        ${lib_SRC_DIR}/
+    )
+  endif()
 
   # Configure library.
   add_subdirectory(${lib_SRC_DIR} ${lib_VERSION_BUILD_DIR})
