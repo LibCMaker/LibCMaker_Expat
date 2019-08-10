@@ -30,6 +30,10 @@
     set(arch_file_sha
       "d9dc32efba7e74f788fcc4f212a43216fc37cf5f23f4c2339664d473353aedf6")
   endif()
+  if(version VERSION_EQUAL "2.2.7")
+    set(arch_file_sha
+      "cbc9102f4a31a8dafd42d642e9a3aa31e79a0aedaa1f6efd2795ebc83174ec18")
+  endif()
 
   set(base_url "https://github.com/libexpat/libexpat/releases/download")
   set(src_dir_name    "expat-${version}")

@@ -22,11 +22,15 @@
 # ****************************************************************************
 
 #-----------------------------------------------------------------------
+# The file is an example of the convenient script for the library build.
+#-----------------------------------------------------------------------
+
+#-----------------------------------------------------------------------
 # Lib's name, version, paths
 #-----------------------------------------------------------------------
 
 set(EXPAT_lib_NAME      "Expat")
-set(EXPAT_lib_VERSION   "2.2.5")
+set(EXPAT_lib_VERSION   "2.2.7")
 set(EXPAT_lib_DIR       "${CMAKE_CURRENT_LIST_DIR}")
 
 # To use our Find<LibName>.cmake.
