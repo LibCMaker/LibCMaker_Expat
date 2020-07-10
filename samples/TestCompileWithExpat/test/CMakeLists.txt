@@ -3,7 +3,7 @@
 #  Purpose:  A CMake build script for Expat library
 #  Author:   NikitaFeodonit, nfeodonit@yandex.com
 # ****************************************************************************
-#    Copyright (c) 2017-2019 NikitaFeodonit
+#    Copyright (c) 2017-2020 NikitaFeodonit
 #
 #    This file is part of the LibCMaker_Expat project.
 #
@@ -26,7 +26,7 @@ if(BUILD_TESTING)
   find_package(GTest REQUIRED)
 
   set(test_NAME "Examle_test")
-  add_executable(${test_NAME} "")
+  add_executable(${test_NAME} ${IOS_MACOSX_BUNDLE} "")
   target_sources(${test_NAME}
     PRIVATE
       ${test_src_DIR}/example_test.cpp
@@ -98,13 +98,77 @@ if(BUILD_TESTING)
       "LD_LIBRARY_PATH=${TEST_WORK_DIR}/lib ${TEST_WORK_DIR}/${test_NAME}"
       # :${LD_LIBRARY_PATH} || :/vendor/lib64:/system/lib64
     )
-    set_tests_properties(${test_NAME} PROPERTIES
-      PASS_REGULAR_EXPRESSION "PASSED"
-    )
-    set_tests_properties(${test_NAME} PROPERTIES
-      FAIL_REGULAR_EXPRESSION "FAILED"
-    )
   endif()
+
+  if(IOS)
+    set(IOS_APP_BUNDLE_IDENTIFIER_GTEST "${IOS_APP_BUNDLE_IDENTIFIER}.gtest")
+    set(IOS_TEST_APP_BIN_DIR
+      "${PROJECT_BINARY_DIR}/test/\${CONFIGURATION}\${EFFECTIVE_PLATFORM_NAME}/${test_NAME}.app"
+    )
+    set(IOS_TEST_APP_FULL_BIN_DIR
+      "${PROJECT_BINARY_DIR}/test/$<CONFIG>-iphonesimulator/${test_NAME}.app"
+    )
+
+    set_target_properties(${test_NAME} PROPERTIES
+      MACOSX_BUNDLE_INFO_STRING "${IOS_APP_BUNDLE_IDENTIFIER_GTEST}"
+      MACOSX_BUNDLE_GUI_IDENTIFIER "${IOS_APP_BUNDLE_IDENTIFIER_GTEST}"
+      MACOSX_BUNDLE_BUNDLE_NAME "${IOS_APP_BUNDLE_IDENTIFIER_GTEST}"
+
+      XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "${IOS_CODE_SIGN_IDENTITY}"
+      XCODE_ATTRIBUTE_DEVELOPMENT_TEAM ${DEVELOPMENT_TEAM_ID}
+      XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET ${IOS_DEPLOYMENT_TARGET}
+      XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY ${IOS_DEVICE_FAMILY}
+    )
+
+    if(BUILD_SHARED_LIBS)
+      add_custom_command(TARGET ${test_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory
+          "${IOS_TEST_APP_BIN_DIR}/lib"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+          "${CMAKE_INSTALL_PREFIX}/lib"
+          "${IOS_TEST_APP_BIN_DIR}/lib/"
+      )
+    endif()
+
+    if(IOS_CODE_SIGN_IDENTITY)
+      # Codesign the framework in it's new spot
+      add_custom_command(TARGET ${test_NAME} POST_BUILD
+        #COMMAND codesign --force --verbose
+        #    ${IOS_TEST_APP_BIN_DIR}/Frameworks/${FRAMEWORK_NAME}.framework
+        #    --sign ${IOS_CODE_SIGN_IDENTITY}
+        #COMMAND codesign --force --verbose
+        #    \${BUILT_PRODUCTS_DIR}/${test_NAME}.app/Frameworks/${FRAMEWORK_NAME}.framework
+        #    --sign ${IOS_CODE_SIGN_IDENTITY}
+        COMMAND codesign --force --verbose
+            ${IOS_TEST_APP_BIN_DIR}/${test_NAME}
+            --sign ${IOS_CODE_SIGN_IDENTITY}
+      )
+    endif()
+
+    add_test(NAME install_${test_NAME}
+      COMMAND xcrun simctl install booted ${IOS_TEST_APP_FULL_BIN_DIR}/
+    )
+    add_test(NAME ${test_NAME}
+      COMMAND xcrun simctl launch --console-pty booted
+        ${IOS_APP_BUNDLE_IDENTIFIER_GTEST}
+    )
+
+    # NOTE: Use '--console-pty' with 'xcrun simctl launch' for Travis CI,
+    # not '--console'. With '--console' is error:
+    # -----------------------------------------------------------------------
+    # Unable to establish FIFO: Error 2
+    # An error was encountered processing the command (domain=NSPOSIXErrorDomain, code=2):
+    # The operation couldn.t be completed. No such file or directory
+    # No such file or directory
+    # -----------------------------------------------------------------------
+  endif()
+
+  set_tests_properties(${test_NAME} PROPERTIES
+    PASS_REGULAR_EXPRESSION "PASSED"
+  )
+  set_tests_properties(${test_NAME} PROPERTIES
+    FAIL_REGULAR_EXPRESSION "FAILED"
+  )
 endif()
 
 
