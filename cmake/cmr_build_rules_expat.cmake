@@ -23,17 +23,19 @@
 
 # Part of "LibCMaker/cmake/cmr_build_rules.cmake".
 
-  set(expat_BUILD_shared OFF)
-  if(BUILD_SHARED_LIBS)
-    set(expat_BUILD_shared ON)
-  endif()
-  option(BUILD_shared "build a shared expat library" ${expat_BUILD_shared})
-
   set(expat_INSTALL ON)
   if(SKIP_INSTALL_ALL)
     set(expat_INSTALL OFF)
   endif()
-  option(INSTALL "install expat files in cmake install target" ${expat_INSTALL})
+  option(EXPAT_ENABLE_INSTALL "install expat files in cmake install target" ${expat_INSTALL})
+
+  if(MSVC)
+    set(_EXPAT_MSVC_STATIC_CRT OFF)
+    if(cmr_USE_STATIC_RUNTIME)
+      set(_EXPAT_MSVC_STATIC_CRT ON)
+    endif()
+    set(EXPAT_MSVC_STATIC_CRT ${_EXPAT_MSVC_STATIC_CRT} CACHE BOOL "Use /MT flag (static CRT) when compiling in MSVC")
+  endif()
 
   # Copy CMake build scripts.
   if(COPY_EXPAT_CMAKE_BUILD_SCRIPTS)

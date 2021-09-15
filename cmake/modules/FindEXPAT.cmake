@@ -17,10 +17,10 @@
 # FIND_* is invoked first with specified paths and NO_DEFAULT_PATH
 # and then again with no specified paths to search the default
 # locations. When an earlier FIND_* succeeds, subsequent FIND_*s
-# searching for the same item do nothing. 
+# searching for the same item do nothing.
 find_path(EXPAT_INCLUDE_DIR
   NAMES expat.h
-#  PATHS 
+#  PATHS
 #    "$ENV{LIB_DIR}/include/"
 #    "$ENV{LIB_DIR}/include/expat"
 #    c:/msys/local/include
@@ -41,7 +41,10 @@ find_path(EXPAT_INCLUDE_DIR
 find_library(EXPAT_LIBRARY
   NAMES
     expatd expat libexpatd libexpat
-#  PATHS 
+    libexpatw libexpatwd
+    libexpatMD libexpatwMD libexpatdMD libexpatwdMD
+    libexpatMT libexpatwMT libexpatdMT libexpatwdMT
+#  PATHS
 #    "$ENV{LIB_DIR}/lib"
 #    c:/msys/local/lib
 #  HINTS
